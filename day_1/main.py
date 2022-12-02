@@ -1,11 +1,6 @@
+from helper.main import read_data
+
 print("Day 1 results:")
-
-
-def read_data(file: str):
-    with open(file) as f:
-        return f.readlines()
-
-
 def sums(data: [str]):
     sanitized = [x.replace("\n", "") for x in data]
 
