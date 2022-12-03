@@ -1,12 +1,8 @@
-from helper.main import read_data, TEST_FILE, FILE
+from helper.main import read_data, sanitize, TEST_FILE, FILE
 
-test_data = read_data(TEST_FILE)
-data = read_data(FILE)
+test_data = sanitize(read_data(TEST_FILE))
+data = sanitize(read_data(FILE))
 
-def sanitize(data: [str]):
-    return [x.replace("\n", "") for x in data]
-
-test_data = sanitize(test_data)
 
 def find_share_item(rucksack: str):
     """
@@ -65,10 +61,10 @@ def priority_of_three(data: [str]):
     :param data:
     :return:
     """
-    chunks = [
-        data[:3],
-        data[3:6]
-    ]
+    chunks = []
+    for i, x in enumerate(data):
+        if i == 0 or i % 3 == 0:
+            chunks.append(data[i:i+3])
 
     share_items = []
     for chunk in chunks:
@@ -80,3 +76,5 @@ def priority_of_three(data: [str]):
 
 
 assert 70 == priority_of_three(test_data)
+
+print(priority_of_three(data))
