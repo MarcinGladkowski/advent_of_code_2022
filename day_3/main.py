@@ -1,8 +1,7 @@
-from helper.main import read_data, TEST_FILE
+from helper.main import read_data, TEST_FILE, FILE
 
-data = read_data(TEST_FILE)
-
-sanitize_data = [x.replace("\n", "") for x in data]
+test_data = read_data(TEST_FILE)
+data = read_data(FILE)
 
 
 def find_share_item(rucksack: str):
@@ -44,5 +43,12 @@ def define_priority(symbol: str):
         return dec_ascii - 38
 
 
+def priority_sum(data: [str]):
+    return sum(define_priority(find_share_item(item)) for item in data)
+
+
 assert 27 == define_priority('A')
 assert 1 == define_priority('a')
+assert 157 == priority_sum(test_data)
+
+print(priority_sum(data))
