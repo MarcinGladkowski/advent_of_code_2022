@@ -135,5 +135,5 @@ def strategy(player1: str, expected_result):
                 return scenario.get('win')
 
 
-
 assert 12 == calculate_win(test_data, strategy)
+print(calculate_win(read_data(FILE), strategy))
