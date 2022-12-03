@@ -3,6 +3,10 @@ from helper.main import read_data, TEST_FILE, FILE
 test_data = read_data(TEST_FILE)
 data = read_data(FILE)
 
+def sanitize(data: [str]):
+    return [x.replace("\n", "") for x in data]
+
+test_data = sanitize(test_data)
 
 def find_share_item(rucksack: str):
     """
@@ -50,5 +54,29 @@ def priority_sum(data: [str]):
 assert 27 == define_priority('A')
 assert 1 == define_priority('a')
 assert 157 == priority_sum(test_data)
-
+# solution for part I
 print(priority_sum(data))
+
+
+def priority_of_three(data: [str]):
+    """
+    chunking to implement
+
+    :param data:
+    :return:
+    """
+    chunks = [
+        data[:3],
+        data[3:6]
+    ]
+
+    share_items = []
+    for chunk in chunks:
+        share_items.append(
+            list(set(chunk[0]) & set(chunk[1]) & set(chunk[2]))
+        )
+
+    return sum([define_priority(x[0]) for x in share_items])
+
+
+assert 70 == priority_of_three(test_data)
