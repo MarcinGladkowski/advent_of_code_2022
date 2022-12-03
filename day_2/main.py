@@ -25,19 +25,23 @@ SYMBOLS = {
 SCENARIOS = [
     {
         'options': [ROCK, SCISSORS],
-        'win': ROCK
+        'win': ROCK,
+        'lose': SCISSORS
     },
     {
         'options': [ROCK, PAPER],
-        'win': PAPER
+        'win': PAPER,
+        'lose': ROCK
     },
     {
         'options': [PAPER, SCISSORS],
-        'win': SCISSORS
+        'win': SCISSORS,
+        'lose': PAPER
     },
     {
         'options': [PAPER, SCISSORS],
-        'win': SCISSORS
+        'win': SCISSORS,
+        'lose': PAPER
     }
 ]
 
@@ -48,12 +52,18 @@ WIN = 6
 test_data = read_data(TEST_FILE)
 
 
-def calculate_win(data):
+def calculate_win(data: [str], strategy=None):
     sanitize_data = [x.replace("\n", '').split(" ") for x in data]
 
     sum = 0
     for game_round in sanitize_data:
-        sum += calculate_round(recognize_symbol(game_round[0]), recognize_symbol(game_round[1]))
+        player_1 = recognize_symbol(game_round[0])
+        player_2 = recognize_symbol(game_round[1])
+
+        if strategy is not None:
+            player_2 = strategy(player_1, game_round[1])
+
+        sum += calculate_round(player_1, player_2)
 
     return sum
 
@@ -93,3 +103,37 @@ assert 1 == calculate_round(PAPER, ROCK)
 assert 15 == calculate_win(test_data)
 
 assert 10718 == calculate_win(read_data(FILE))
+
+"""
+Part TWO
+ X means you need to lose, 
+ Y means you need to end the round in a draw, and
+ Z means you need to win. Good luck!"
+"""
+STRATEGY = {
+    'X': 'lose',
+    'Y': 'draw',
+    'Z': 'win'
+}
+
+
+def strategy(player1: str, expected_result):
+    """
+    Find scenario for action
+    """
+    if expected_result == 'Y':
+        return player1
+
+    if expected_result == 'X':
+        for scenario in SCENARIOS:
+            if scenario.get('win') == player1:
+                return scenario.get('lose')
+
+    if expected_result == 'Z':
+        for scenario in SCENARIOS:
+            if scenario.get('lose') == player1:
+                return scenario.get('win')
+
+
+
+assert 12 == calculate_win(test_data, strategy)
