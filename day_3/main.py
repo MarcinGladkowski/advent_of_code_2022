@@ -26,14 +26,23 @@ assert 'p' == find_share_item('vJrwpWtwJgWrhcsFMMfFFhFp')
 def define_priority(symbol: str):
     """
     Lowercase item types a through z have priorities 1 through 26.
+    Range 97 -> 122
+    Base value 97-96=1 base: 96
 
-
-    Uppercase item types A through Z have priorities 27 through 52. - ASCI dec code starts from 65
+    Uppercase item types A through Z have priorities 27 through 52. - ASCII dec code starts from 65
     We can set base value as 65-38=27
+    Range 65 -> 90
 
     :return:
     """
-    return ord(symbol) - 38
+    dec_ascii = ord(symbol)
+
+    if 122 >= dec_ascii >= 97:
+        return dec_ascii - 96
+
+    if 90 >= dec_ascii >= 65:
+        return dec_ascii - 38
 
 
 assert 27 == define_priority('A')
+assert 1 == define_priority('a')
