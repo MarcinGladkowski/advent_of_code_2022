@@ -4,6 +4,7 @@ from helper.main import read_data, sanitize, FILE, TEST_FILE
 print("Day 5")
 
 test_data = sanitize(read_data(TEST_FILE))
+data = sanitize(read_data(FILE))
 
 
 def parse_stack_elements(row: str):
@@ -76,7 +77,6 @@ def fill_stacks(data: [str]):
             break
 
     pattern = create_pattern(columns)
-
     rows = []
     for i, row in enumerate(data):
         if i < columns_index:
@@ -112,27 +112,67 @@ assert {1: ['[Z]', '[N]'], 2: ['[M]', '[C]', '[D]'], 3: ['[P]']} == sort_stacks(
 
 
 def parse_step(move: str):
-    return list(map(lambda x: int(x), re.findall("\d", move)))
+    return list(map(lambda x: int(x), re.findall("\d+", move)))
 
 
 assert [1, 2, 1] == parse_step("move 1 from 2 to 1")
+assert [10, 2, 1] == parse_step("move 10 from 2 to 1")
 
 
-def move_elements(stacks: dict, step: [int]):
+def move_elements(stacks: dict, step: [int]) -> object:
     elements_count = step[0]
     from_stack = step[1]
     to_stack = step[2]
-
     elements_to_move = stacks[from_stack][-elements_count:]
+    elements_to_move.reverse()
 
-    for el in elements_to_move:
-        stacks[from_stack].remove(el)
-
+    stacks[from_stack] = stacks[from_stack][:-elements_count]
     stacks[to_stack] = stacks[to_stack] + elements_to_move
 
     return stacks
 
 
+assert {1: ['[F]', '[P]', '[F]', '[G]', '[L]', '[V]', '[T]', '[H]', '[D]', '[Q]', '[N]', '[M]', '[G]'],
+        2: ['[H]', '[R]', '[M]'], 3: ['[Z]', '[J]', '[J]', '[P]', '[F]'], 4: ['[R]', '[S]', '[R]', '[V]'],
+        5: ['[W]', '[L]', '[B]', '[D]', '[Q]', '[N]', '[V]'], 6: ['[P]', '[R]', '[B]', '[C]', '[M]', '[R]'],
+        7: ['[D]', '[B]', '[T]', '[V]', '[L]', '[D]', '[Q]', '[S]'],
+        8: ['[J]', '[N]', '[C]', '[S]', '[C]', '[C]', '[S]', '[S]', '[S]'], 9: ['[P]']} == move_elements(
+    {1: ['[F]', '[P]', '[F]', '[G]', '[L]', '[V]', '[T]', '[H]', '[D]', '[Q]', '[N]', '[M]', '[G]'],
+     2: ['[H]', '[R]', '[M]'], 3: ['[Z]', '[J]', '[J]', '[P]', '[F]', '[P]'], 4: ['[R]', '[S]', '[R]', '[V]'],
+     5: ['[W]', '[L]', '[B]', '[D]', '[Q]', '[N]', '[V]'], 6: ['[P]', '[R]', '[B]', '[C]', '[M]', '[R]'],
+     7: ['[D]', '[B]', '[T]', '[V]', '[L]', '[D]', '[Q]', '[S]'],
+     8: ['[J]', '[N]', '[C]', '[S]', '[C]', '[C]', '[S]', '[S]', '[S]'], 9: []}, [1, 3, 9])
 
-assert {1: ['[Z]', '[N]', '[D]'], 2: ['[M]', '[C]'], 3: ['[P]']} == move_elements(
-    {1: ['[Z]', '[N]'], 2: ['[M]', '[C]', '[D]'], 3: ['[P]']}, [1, 2, 1])
+
+# assert {1: ['[Z]', '[N]', '[D]'], 2: ['[M]', '[C]'], 3: ['[P]']} == move_elements(
+#     {1: ['[Z]', '[N]'], 2: ['[M]', '[C]', '[D]'], 3: ['[P]']}, [1, 2, 1])
+
+
+def process(data: [str]):
+    stacks = fill_stacks(data)
+    stacks = sort_stacks(stacks)
+
+    moves_start_index = 10
+
+    for i, line in enumerate(data):
+        if i >= moves_start_index:
+            print(i, line)
+            stacks = move_elements(stacks, parse_step(line))
+            print(stacks)
+
+    return stacks
+
+
+#assert {1: ['[C]'], 2: ['[M]'], 3: ['[P]', '[D]', '[N]', '[Z]']} == process(test_data)
+
+
+def get_last_elements(stacks: dict):
+    return ''.join([re.search('\w', x[len(x)-1]).group(0) for (i, x) in stacks.items()])
+
+
+assert 'AB' == get_last_elements({1: ["[C]", "[A]"], 2: ["[B]"]})
+
+
+print(
+    get_last_elements(process(data))
+)
