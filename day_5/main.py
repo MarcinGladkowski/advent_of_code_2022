@@ -63,7 +63,7 @@ assert '[X] [X] [X] [X]' == create_pattern(4)
 
 
 def create_stacks(columns_count: int):
-    return {x: [] for x in range(columns_count+1) if x}
+    return {x: [] for x in range(columns_count + 1) if x}
 
 
 def fill_stacks(data: [str]):
@@ -91,9 +91,48 @@ def fill_stacks(data: [str]):
     for row in rows:
         for i, el in enumerate(row):
             if el != '[X]':
-                stacks[i+1].append(el)
+                stacks[i + 1].append(el)
 
     return stacks
 
 
 assert {1: ['[N]', '[Z]'], 2: ['[D]', '[C]', '[M]'], 3: ['[P]']} == fill_stacks(test_data)
+
+
+def sort_stacks(stacks: dict):
+    for k, v in stacks.items():
+        v.reverse()
+        stacks[k] = v
+
+    return stacks
+
+
+assert {1: ['[Z]', '[N]'], 2: ['[M]', '[C]', '[D]'], 3: ['[P]']} == sort_stacks(
+    {1: ['[N]', '[Z]'], 2: ['[D]', '[C]', '[M]'], 3: ['[P]']})
+
+
+def parse_step(move: str):
+    return list(map(lambda x: int(x), re.findall("\d", move)))
+
+
+assert [1, 2, 1] == parse_step("move 1 from 2 to 1")
+
+
+def move_elements(stacks: dict, step: [int]):
+    elements_count = step[0]
+    from_stack = step[1]
+    to_stack = step[2]
+
+    elements_to_move = stacks[from_stack][-elements_count:]
+
+    for el in elements_to_move:
+        stacks[from_stack].remove(el)
+
+    stacks[to_stack] = stacks[to_stack] + elements_to_move
+
+    return stacks
+
+
+
+assert {1: ['[Z]', '[N]', '[D]'], 2: ['[M]', '[C]'], 3: ['[P]']} == move_elements(
+    {1: ['[Z]', '[N]'], 2: ['[M]', '[C]', '[D]'], 3: ['[P]']}, [1, 2, 1])
