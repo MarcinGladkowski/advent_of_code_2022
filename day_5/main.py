@@ -144,26 +144,22 @@ assert {1: ['[F]', '[P]', '[F]', '[G]', '[L]', '[V]', '[T]', '[H]', '[D]', '[Q]'
      8: ['[J]', '[N]', '[C]', '[S]', '[C]', '[C]', '[S]', '[S]', '[S]'], 9: []}, [1, 3, 9])
 
 
-# assert {1: ['[Z]', '[N]', '[D]'], 2: ['[M]', '[C]'], 3: ['[P]']} == move_elements(
-#     {1: ['[Z]', '[N]'], 2: ['[M]', '[C]', '[D]'], 3: ['[P]']}, [1, 2, 1])
+assert {1: ['[Z]', '[N]', '[D]'], 2: ['[M]', '[C]'], 3: ['[P]']} == move_elements(
+    {1: ['[Z]', '[N]'], 2: ['[M]', '[C]', '[D]'], 3: ['[P]']}, [1, 2, 1])
 
 
 def process(data: [str]):
     stacks = fill_stacks(data)
     stacks = sort_stacks(stacks)
 
-    moves_start_index = 10
-
     for i, line in enumerate(data):
-        if i >= moves_start_index:
-            print(i, line)
+        if line.startswith('move'):
             stacks = move_elements(stacks, parse_step(line))
-            print(stacks)
 
     return stacks
 
 
-#assert {1: ['[C]'], 2: ['[M]'], 3: ['[P]', '[D]', '[N]', '[Z]']} == process(test_data)
+assert {1: ['[C]'], 2: ['[M]'], 3: ['[P]', '[D]', '[N]', '[Z]']} == process(test_data)
 
 
 def get_last_elements(stacks: dict):
@@ -174,5 +170,5 @@ assert 'AB' == get_last_elements({1: ["[C]", "[A]"], 2: ["[B]"]})
 
 
 print(
-    get_last_elements(process(data))
+    f"Part I: {get_last_elements(process(data))}"
 )
