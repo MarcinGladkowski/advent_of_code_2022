@@ -119,12 +119,14 @@ assert [1, 2, 1] == parse_step("move 1 from 2 to 1")
 assert [10, 2, 1] == parse_step("move 10 from 2 to 1")
 
 
-def move_elements(stacks: dict, step: [int]) -> object:
+def move_elements(stacks: dict, step: [int], reverse=True) -> object:
     elements_count = step[0]
     from_stack = step[1]
     to_stack = step[2]
     elements_to_move = stacks[from_stack][-elements_count:]
-    elements_to_move.reverse()
+
+    if reverse:
+        elements_to_move.reverse()
 
     stacks[from_stack] = stacks[from_stack][:-elements_count]
     stacks[to_stack] = stacks[to_stack] + elements_to_move
@@ -148,13 +150,13 @@ assert {1: ['[Z]', '[N]', '[D]'], 2: ['[M]', '[C]'], 3: ['[P]']} == move_element
     {1: ['[Z]', '[N]'], 2: ['[M]', '[C]', '[D]'], 3: ['[P]']}, [1, 2, 1])
 
 
-def process(data: [str]):
+def process(data: [str], reverse=True):
     stacks = fill_stacks(data)
     stacks = sort_stacks(stacks)
 
     for i, line in enumerate(data):
         if line.startswith('move'):
-            stacks = move_elements(stacks, parse_step(line))
+            stacks = move_elements(stacks, parse_step(line), reverse)
 
     return stacks
 
@@ -171,4 +173,7 @@ assert 'AB' == get_last_elements({1: ["[C]", "[A]"], 2: ["[B]"]})
 
 print(
     f"Part I: {get_last_elements(process(data))}"
+)
+print(
+    f"Part II: {get_last_elements(process(data, reverse=False))}"
 )
