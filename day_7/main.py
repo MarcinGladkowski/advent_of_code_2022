@@ -1,10 +1,10 @@
 from __future__ import annotations
 import re
 
-from helper.main import read_data, sanitize, TEST_FILE
+from helper.main import read_data, sanitize, TEST_FILE, FILE
 
 test_data = sanitize(read_data(TEST_FILE))
-
+file = sanitize(read_data(FILE))
 
 print(test_data)
 
@@ -28,6 +28,9 @@ class Dir:
     def add(self, node: Dir | File) -> None:
         self.children.append(node)
         self.size += node.size
+
+        if self.parent is not None:
+            self.parent.size += self.size
 
     def find(self, name: str):
         for node in self.children:
@@ -60,7 +63,7 @@ class CommandProcessor:
 
     def __init__(self) -> None:
         self.current_command: str | None
-        self.main_dir = Dir('/', True)
+        self.main_dir = Dir('/')
         self.current_dir = self.main_dir
 
     def change_command(self, io: str):
@@ -113,7 +116,6 @@ class CommandProcessor:
         :param io:
         :return:
         """
-
         # direction it's a dir name
         if direction != '..':
             self.current_dir = self.current_dir.find(direction)
@@ -130,7 +132,6 @@ cmd.execute_commands(data)
 
 
 def count_less_than(dir, sum):
-
     if dir is None:
         return sum
 
@@ -147,8 +148,9 @@ def count_less_than(dir, sum):
 
 
 sum = count_less_than(cmd.main_dir, 0)
-
 print(sum)
+
+
 def print_elements(el, nested):
     nested += "\t"
     if isinstance(el, Dir):
@@ -158,3 +160,9 @@ def print_elements(el, nested):
 
 
 print_elements(cmd.main_dir, "")
+
+
+cmd_on_data = CommandProcessor()
+cmd_on_data.execute_commands(file[1:])
+
+#print_elements(cmd_on_data.main_dir, "")
