@@ -1,12 +1,9 @@
 from __future__ import annotations
-import re
 
 from helper.main import read_data, sanitize, TEST_FILE, FILE
 
 test_data = sanitize(read_data(TEST_FILE))
 file = sanitize(read_data(FILE))
-
-print(test_data)
 
 
 class File:
@@ -28,7 +25,6 @@ class Dir:
     def add(self, node: Dir | File) -> None:
         self.children.append(node)
         self.size += node.size
-
         if self.parent is not None:
             self.parent.size += self.size
 
@@ -124,45 +120,12 @@ class CommandProcessor:
             self.current_dir = self.current_dir.parent
 
 
-data = ['$ ls', 'dir a', '14848514 b.txt', '8504156 c.dat', 'dir d', '$ cd a', '$ ls', 'dir e',
-        '29116 f', '2557 g', '62596 h.lst', '$ cd e', '$ ls', '584 i', '$ cd ..', '$ cd ..', '$ cd d', '$ ls',
-        '4060174 j', '8033020 d.log', '5626152 d.ext', '7214296 k']
-cmd = CommandProcessor()
-cmd.execute_commands(data)
-
-
-def count_less_than(dir, sum):
-    if dir is None:
-        return sum
-
-    print(dir.name, dir.size)
-    sum += dir.size
-
-    if isinstance(dir, Dir):
-
-        if len(dir.children) == 0:
-            return sum
-
-        for i in dir.children:
-            count_less_than(i, sum)
-
-
-sum = count_less_than(cmd.main_dir, 0)
-print(sum)
-
-
-def print_elements(el, nested):
-    nested += "\t"
-    if isinstance(el, Dir):
-        for i in el.children:
-            print(nested, str(i), i.name, i.size)
-            print_elements(i, nested)
-
-
-print_elements(cmd.main_dir, "")
-
-
-cmd_on_data = CommandProcessor()
-cmd_on_data.execute_commands(file[1:])
-
-#print_elements(cmd_on_data.main_dir, "")
+# data = ['$ ls', 'dir a', '14848514 b.txt', '8504156 c.dat', 'dir d', '$ cd a', '$ ls', 'dir e',
+#         '29116 f', '2557 g', '62596 h.lst', '$ cd e', '$ ls', '584 i', '$ cd ..', '$ cd ..', '$ cd d', '$ ls',
+#         '4060174 j', '8033020 d.log', '5626152 d.ext', '7214296 k']
+# cmd = CommandProcessor()
+# cmd.execute_commands(data)
+#
+#
+# cmd_on_data = CommandProcessor()
+# cmd_on_data.execute_commands(file[1:])

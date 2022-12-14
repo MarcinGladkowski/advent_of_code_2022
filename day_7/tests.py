@@ -1,11 +1,11 @@
 import unittest
 import main
-
+from day_7.utils import filter_size, filter_directories
 
 class CommandProcessorTestCase(unittest.TestCase):
 
     def test_add_file(self):
-        main_dir = main.Dir('/', True)
+        main_dir = main.Dir('/')
         main.add_file('111 a.txt', main_dir)
 
         self.assertIsInstance(main_dir.children[0], main.File)
@@ -49,6 +49,15 @@ class CommandProcessorTestCase(unittest.TestCase):
 
         self.assertEqual('d', cmd.current_dir.name)
         self.assertEqual(4, len(cmd.current_dir.children))
+
+    def test_on_contest_test_data_sum_dirs_size(self):
+        data = ['$ ls', 'dir a', 'dir b', '$ cd a', '$ ls', '100 a.txt', '200 b.txt', '$ cd ..']
+        cmd = main.CommandProcessor()
+        cmd.execute_commands(data)
+
+        dirs = []
+
+        self.assertEqual(600, sum(filter_size(filter_directories(cmd.main_dir, dirs))))
 
 
 if __name__ == '__main__':
