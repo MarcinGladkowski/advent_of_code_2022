@@ -42,5 +42,31 @@ for y, row in enumerate(forrest):
             Tree(el, Coordinates(x, y, is_on_edge(x, y, forrest)))
         )
 
-
 assert 16 == len(list(filter(lambda tree: tree.coordinates.on_edge, transformed_forrest)))
+
+
+def trees_on_axle_x(tree: Tree, area: list):
+    x_trees = list(filter(lambda el: el.coordinates.y == tree.coordinates.y, area))
+
+    left_side_trees_higher = filter(lambda el: el.height < tree.height, x_trees[:][0:tree.coordinates.x])
+    right_side_trees_higher = filter(lambda el: el.height < tree.height, x_trees[:][tree.coordinates.x + 1:])
+
+    return True if len(list(left_side_trees_higher)) > 0 and len(list(right_side_trees_higher)) > 0 else False
+
+
+assert True == trees_on_axle_x(Tree(5, Coordinates(1, 1, False)), transformed_forrest)
+assert False == trees_on_axle_x(Tree(5, Coordinates(2, 2, False)), transformed_forrest)
+
+
+def visible_trees(forrest: list):
+    count = 0
+    for tree in forrest:
+        if tree.coordinates.on_edge:
+            count = count + 1
+
+    return count
+
+
+print(
+    visible_trees(transformed_forrest)
+)
