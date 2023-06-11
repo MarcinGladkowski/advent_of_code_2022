@@ -1,3 +1,5 @@
+from typing import Callable
+
 from day_8.forrest import transform_forrest, Tree, Coordinates
 
 forrest = [
@@ -11,8 +13,7 @@ forrest = [
 test_forrest = transform_forrest(forrest)
 
 
-def scenic_for_tree_axle_x(tree: Tree, area: list):
-
+def scenic_for_tree_axle_x(tree: Tree, area: list, count_scenic: Callable):
     x_trees = list(filter(lambda el: el.coordinates.y == tree.coordinates.y, area))
 
     left_trees = list(map(lambda row_tree: row_tree.height, x_trees[:tree.coordinates.x]))
@@ -20,11 +21,10 @@ def scenic_for_tree_axle_x(tree: Tree, area: list):
 
     right_trees = list(map(lambda row_tree: row_tree.height, x_trees[tree.coordinates.x + 1:]))
 
-    return count_visible_scenic_trees(left_trees, tree), count_visible_scenic_trees(right_trees, tree)
+    return count_scenic(left_trees, tree), count_scenic(right_trees, tree)
 
 
-def scenic_for_tree_axle_y(tree: Tree, area: list):
-
+def scenic_for_tree_axle_y(tree: Tree, area: list, count_scenic: Callable):
     y_trees = list(filter(lambda el: el.coordinates.x == tree.coordinates.x, area))
 
     up_trees = list(map(lambda row_tree: row_tree.height, y_trees[:tree.coordinates.y]))
@@ -32,7 +32,7 @@ def scenic_for_tree_axle_y(tree: Tree, area: list):
 
     down_trees = list(map(lambda row_tree: row_tree.height, y_trees[tree.coordinates.y + 1:]))
 
-    return count_visible_scenic_trees(up_trees, tree), count_visible_scenic_trees(down_trees, tree)
+    return count_scenic(up_trees, tree), count_scenic(down_trees, tree)
 
 
 def count_visible_scenic_trees(trees: list, tree: Tree):
@@ -52,10 +52,7 @@ def count_visible_scenic_trees(trees: list, tree: Tree):
     return counter
 
 
-
 tree_to_calculate_scenic = Tree(5, Coordinates(2, 1, False))
 
-scenic_for_tree_axle_y(tree_to_calculate_scenic, test_forrest)
-
-assert scenic_for_tree_axle_x(tree_to_calculate_scenic, test_forrest) == (1, 2)
-assert scenic_for_tree_axle_y(tree_to_calculate_scenic, test_forrest) == (1, 2)
+assert scenic_for_tree_axle_x(tree_to_calculate_scenic, test_forrest, count_visible_scenic_trees) == (1, 2)
+assert scenic_for_tree_axle_y(tree_to_calculate_scenic, test_forrest, count_visible_scenic_trees) == (1, 2)
