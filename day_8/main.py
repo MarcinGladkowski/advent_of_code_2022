@@ -8,7 +8,6 @@ exercise_data = []
 for row in data:
     exercise_data.append(list(map(lambda x: int(x), list(row))))
 
-
 forrest = [
     [3, 0, 3, 7, 3],
     [2, 5, 5, 1, 2],
@@ -38,6 +37,8 @@ class Coordinates:
 
 
 class Tree:
+    __slots__ = ("height", "coordinates")
+
     def __init__(self, height: int, coordinates: Coordinates):
         self.height = height
         self.coordinates = coordinates
@@ -81,7 +82,7 @@ def tree_visibility_on_axle_y(tree: Tree, area: list):
     return False if len(up_side_trees_higher) > 0 and len(down_side_trees_higher) > 0 else True
 
 
-assert True == tree_visibility_on_axle_y(Tree(5, Coordinates(1, 1, False)), transformed_forrest)
+assert tree_visibility_on_axle_y(Tree(5, Coordinates(1, 1, False)), transformed_forrest)
 assert False == tree_visibility_on_axle_y(Tree(5, Coordinates(2, 2, False)), transformed_forrest)
 
 
@@ -89,15 +90,14 @@ def visible_trees(test_forrest: list):
     count = 0
     for tree in test_forrest:
         if tree.coordinates.on_edge:
-            count = count + 1
+            count += 1
             continue
 
         if tree_visibility_on_axle_x(tree, test_forrest) or tree_visibility_on_axle_y(tree, test_forrest):
-            count = count + 1
+            count += 1
 
     return count
 
 
 assert 21 == visible_trees(transformed_forrest)
 assert 1715 == visible_trees(transform_forrest(exercise_data))
-
