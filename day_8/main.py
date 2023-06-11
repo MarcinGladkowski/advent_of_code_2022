@@ -1,3 +1,4 @@
+from day_8.tree_house_scenic import highest_tree_scenic
 from helper.main import read_data, sanitize, FILE
 from forrest import Tree, Coordinates, transform_forrest, visible_trees, tree_visibility_on_axle_x, tree_visibility_on_axle_y
 
@@ -31,4 +32,7 @@ assert False == tree_visibility_on_axle_y(Tree(5, Coordinates(2, 2, False)), tra
 
 
 assert 21 == visible_trees(transformed_forrest)
-# assert 1715 == visible_trees(transform_forrest(exercise_data))
+
+# answers
+assert 1715 == visible_trees(transform_forrest(exercise_data))
+assert 374400 == highest_tree_scenic(transform_forrest(exercise_data))

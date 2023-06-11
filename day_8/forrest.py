@@ -7,6 +7,8 @@ def is_on_edge(x: int, y: int, area: list) -> bool:
 
 
 class Coordinates:
+
+    __slots__ = ("x", "y", "on_edge")
     """
     on_edge: always visible
     """

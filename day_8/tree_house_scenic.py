@@ -1,5 +1,4 @@
 import functools
-import math
 from typing import Callable
 
 from day_8.forrest import transform_forrest, Tree, Coordinates
@@ -19,7 +18,7 @@ def scenic_for_tree_axle_x(tree: Tree, area: list, count_scenic: Callable):
     x_trees = list(filter(lambda el: el.coordinates.y == tree.coordinates.y, area))
 
     left_trees = list(map(lambda row_tree: row_tree.height, x_trees[:tree.coordinates.x]))
-    left_trees.sort(reverse=True)
+    left_trees.reverse()
 
     right_trees = list(map(lambda row_tree: row_tree.height, x_trees[tree.coordinates.x + 1:]))
 
@@ -30,7 +29,7 @@ def scenic_for_tree_axle_y(tree: Tree, area: list, count_scenic: Callable):
     y_trees = list(filter(lambda el: el.coordinates.x == tree.coordinates.x, area))
 
     up_trees = list(map(lambda row_tree: row_tree.height, y_trees[:tree.coordinates.y]))
-    up_trees.sort(reverse=True)
+    up_trees.reverse()
 
     down_trees = list(map(lambda row_tree: row_tree.height, y_trees[tree.coordinates.y + 1:]))
 
@@ -61,13 +60,18 @@ assert scenic_for_tree_axle_x(tree_to_calculate_scenic, test_forrest, count_visi
 assert scenic_for_tree_axle_y(tree_to_calculate_scenic, test_forrest, count_visible_scenic_trees) == (1, 2)
 
 
+def scenic_trees_for_tree(tree: Tree, area: list):
+    scenic_count_for_tree = scenic_for_tree_axle_x(tree, area, count_visible_scenic_trees) \
+                            + scenic_for_tree_axle_y(tree, area, count_visible_scenic_trees)
+
+    return functools.reduce(lambda a, b: a * b, scenic_count_for_tree)
+
+
 def highest_tree_scenic(scenic_forrest: list):
     highest_scenic = 0
     for tree in scenic_forrest:
-        scenic_count_for_tree = scenic_for_tree_axle_x(tree, scenic_forrest, count_visible_scenic_trees) \
-                                + scenic_for_tree_axle_y(tree, scenic_forrest, count_visible_scenic_trees)
 
-        calculated = functools.reduce(lambda a, b: a * b, scenic_count_for_tree)
+        calculated = scenic_trees_for_tree(tree, scenic_forrest)
 
         if calculated > highest_scenic:
             highest_scenic = calculated
@@ -76,3 +80,9 @@ def highest_tree_scenic(scenic_forrest: list):
 
 
 assert 16 == highest_tree_scenic(test_forrest)
+
+
+assert 4 == scenic_trees_for_tree(Tree(5, Coordinates(2, 1, False)), test_forrest)
+assert 8 == scenic_trees_for_tree(Tree(5, Coordinates(2, 3, False)), test_forrest)
+
+
