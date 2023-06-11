@@ -4,9 +4,9 @@ print("Day 8")
 
 data = sanitize(read_data(FILE))
 
-prepared_data = []
+exercise_data = []
 for row in data:
-    prepared_data.append(list(map(lambda x: int(x), list(row))))
+    exercise_data.append(list(map(lambda x: int(x), list(row))))
 
 
 forrest = [
@@ -48,13 +48,13 @@ def transform_forrest(data: list):
     for y, row in enumerate(data):
         for x, el in enumerate(row):
             transformed_forrest.append(
-                Tree(el, Coordinates(x, y, is_on_edge(x, y, forrest)))
+                Tree(el, Coordinates(x, y, is_on_edge(x, y, data)))
             )
 
     return transformed_forrest
 
 
-transformed_forrest = transform_forrest(forrest);
+transformed_forrest = transform_forrest(forrest)
 
 assert 16 == len(list(filter(lambda tree: tree.coordinates.on_edge, transformed_forrest)))
 
@@ -99,8 +99,5 @@ def visible_trees(test_forrest: list):
 
 
 assert 21 == visible_trees(transformed_forrest)
-
-print(
-    visible_trees(transform_forrest(prepared_data))
-)
+assert 1715 == visible_trees(transform_forrest(exercise_data))
 
