@@ -24,6 +24,9 @@ class Tree:
         self.height = height
         self.coordinates = coordinates
 
+    def __str__(self) -> str:
+        return f"Tree X:{self.coordinates.x} Y:{self.coordinates.y} with height: {self.height}"
+
 
 def transform_forrest(data: list):
     transformed_forrest = []

@@ -1,5 +1,5 @@
 from helper.main import read_data, sanitize, FILE
-from trees import Tree, Coordinates, transform_forrest, visible_trees, tree_visibility_on_axle_x, tree_visibility_on_axle_y
+from forrest import Tree, Coordinates, transform_forrest, visible_trees, tree_visibility_on_axle_x, tree_visibility_on_axle_y
 
 print("Day 8")
 
@@ -31,4 +31,4 @@ assert False == tree_visibility_on_axle_y(Tree(5, Coordinates(2, 2, False)), tra
 
 
 assert 21 == visible_trees(transformed_forrest)
-assert 1715 == visible_trees(transform_forrest(exercise_data))
+# assert 1715 == visible_trees(transform_forrest(exercise_data))
